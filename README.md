@@ -13,6 +13,4 @@ Vibe Code Chrome/Edge Browser plugin to export chats from Gemini and ChatGPT to 
 >Response from gemini
 
 
-![obsidian view](assets/Obsidian%20View.png)
-
 ![obsidian view](./assets/Obsidian%20View.png)

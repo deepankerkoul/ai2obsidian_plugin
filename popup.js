@@ -1,6 +1,6 @@
 document.getElementById('exportBtn').addEventListener('click', async () => {
   const statusDiv = document.getElementById('status');
-  statusDiv.textContent = "Processing...";
+  statusDiv.textContent = "Extracting formatting...";
   statusDiv.className = "";
   
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -21,7 +21,7 @@ document.getElementById('exportBtn').addEventListener('click', async () => {
       if (response && response.status === "success") {
         const success = await copyToClipboard(response.data);
         if (success) {
-          statusDiv.textContent = "Copied to clipboard!";
+          statusDiv.textContent = "Copied with formatting!";
           statusDiv.className = "success";
         } else {
           statusDiv.textContent = "Clipboard write failed.";
@@ -33,7 +33,7 @@ document.getElementById('exportBtn').addEventListener('click', async () => {
       }
     });
   } catch (err) {
-    statusDiv.textContent = "Script injection failed.";
+    statusDiv.textContent = "Error: Check extension logs.";
     statusDiv.className = "error";
   }
 });
@@ -43,17 +43,12 @@ async function copyToClipboard(text) {
     await navigator.clipboard.writeText(text);
     return true;
   } catch (err) {
-    // Fallback for context restrictions
-    try {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      const successful = document.execCommand('copy');
-      document.body.removeChild(textArea);
-      return successful;
-    } catch (e) {
-      return false;
-    }
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return successful;
   }
 }
