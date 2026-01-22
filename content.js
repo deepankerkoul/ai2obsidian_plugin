@@ -1,3 +1,6 @@
+/**
+ * Converts a DOM element to basic Markdown to preserve formatting.
+ */
 function htmlToMarkdown(element) {
   let markdown = "";
   const root = element.cloneNode(true);
@@ -37,20 +40,33 @@ function extractChat() {
   const isChatGPT = window.location.hostname.includes("chatgpt.com");
 
   if (isChatGPT) {
-    // ChatGPT Selectors (2025/2026 structure)
-    // We look for the main message turn containers
+    // ChatGPT Selectors
     const chatTurns = document.querySelectorAll('article, [data-testid^="conversation-turn-"]');
     
     chatTurns.forEach(turn => {
-      // ChatGPT marks user messages differently than assistant
-      const isUser = turn.querySelector('[data-testid="user-message"]') || turn.innerText.includes("You\n");
-      const role = isUser ? "user" : "assistant";
+      // Improved Role Detection for ChatGPT
+      const userMessageEl = turn.querySelector('[data-message-author-role="user"]');
+      const assistantMessageEl = turn.querySelector('[data-message-author-role="assistant"]');
       
-      // The actual content is usually inside a .prose div for assistant, 
-      // or a simpler div for user.
-      const content = turn.querySelector('.prose, [data-message-author-role="assistant"], [data-message-author-role="user"]') || turn;
+      let role = "assistant"; // Default
+      let contentEl = null;
+
+      if (userMessageEl) {
+        role = "user";
+        contentEl = userMessageEl;
+      } else if (assistantMessageEl) {
+        role = "assistant";
+        contentEl = assistantMessageEl.querySelector('.prose') || assistantMessageEl;
+      } else {
+        // Fallback: Check if the turn specifically contains the "You" header vs AI response
+        const text = turn.innerText;
+        if (text.startsWith("You\n") || turn.querySelector('[data-testid="user-message"]')) {
+          role = "user";
+        }
+        contentEl = turn.querySelector('.prose') || turn;
+      }
       
-      const md = htmlToMarkdown(content);
+      const md = htmlToMarkdown(contentEl);
       if (md) conversation.push({ role, text: md });
     });
   } else {
@@ -67,8 +83,17 @@ function extractChat() {
   if (conversation.length === 0) return null;
 
   return conversation.map(entry => {
-    const type = entry.role === 'user' ? 'user' : 'gemini';
-    const title = entry.role === 'user' ? 'User' : (entry.role === 'assistant' ? 'ChatGPT' : 'Gemini');
+    const isUser = entry.role === 'user';
+    const type = isUser ? 'user' : 'gemini';
+    
+    // Determine Display Title
+    let title = "Gemini";
+    if (isUser) {
+      title = "User";
+    } else if (isChatGPT) {
+      title = "ChatGPT";
+    }
+
     const body = entry.text.split('\n').map(line => `> ${line}`).join('\n');
     return `> [!${type}] ${title}\n${body}\n`;
   }).join('\n\n');
