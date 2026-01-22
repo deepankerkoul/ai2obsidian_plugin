@@ -1,0 +1,18 @@
+<svg width="126" height="126" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="126" height="126" fill="#F0F0F0"/>
+  
+  <path d="M20 35C20 26.7157 26.7157 20 35 20H91C99.2843 20 106 26.7157 106 35V80C106 88.2843 99.2843 95 91 95H45L25 106V95H20V35Z" fill="white" fill-opacity="0.6"/>
+  <path d="M20 35C20 26.7157 26.7157 20 35 20H91C99.2843 20 106 26.7157 106 35V80C106 88.2843 99.2843 95 91 95H45L25 106V95H20V35Z" stroke="white" stroke-opacity="0.3" stroke-width="1"/>
+  
+  <defs>
+    <linearGradient id="logo-gradient" x1="40" y1="40" x2="86" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4B0082" /> <stop offset="50%" stop-color="#1E90FF" /> <stop offset="100%" stop-color="#EE82EE" /> </linearGradient>
+  </defs>
+
+  <g transform="translate(63, 56) scale(0.65)">
+    <path d="M0 -30 L26 -15 V15 L0 30 L-26 15 V-15 Z" stroke="url(#logo-gradient)" stroke-width="4" fill="none" opacity="0.8"/>
+    <path d="M0 -30 V30 M-26 -15 L26 15 M-26 15 L26 -15" stroke="url(#logo-gradient)" stroke-width="2" opacity="0.5"/>
+    
+    <path d="M0 -35 C 2 -5 5 -2 35 0 C 5 2 2 5 0 35 C -2 5 -5 2 -35 0 C -5 -2 -2 -5 0 -35 Z" fill="url(#logo-gradient)" />
+  </g>
+</svg>
